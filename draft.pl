@@ -6,7 +6,6 @@ use feature qw/say/;
 # open my $fh, '<', $ARGV[0] or die;
 my $txt = join '', <>;
 
-
 my $w 		= qr{[A-Za-z]};    	# letter
 my $s		= qr{[ \t]};		# space excluding \n	
 my $x 		= qr{[^\s\d]};		# not a space nor a digit
@@ -14,18 +13,19 @@ my $break 	= qr{%|°C|,\s};		# common number-ending patterns
 my $end 	= qr{$break|,$};	#
 my $wgap 	= qr{$w+$s+$w+};	# gap between words
 
+find_numexp($txt);
 
-while ($txt =~ /	$wgap		# word gap
-					$x*			# remaning characters before numexp
-					\s+			# space
-					(.*?) 		# numexp
-					(?=			# do not consume
+sub find_numexp {
+	while ($txt =~ /	$wgap		# word gap
+						$x*			# remaning characters before numexp
 						\s+			# space
-						$wgap		# word gap
-						|$
-					)
-				/gxp) {;
-		#say STDERR "'${^MATCH}'";
+						(.*?) 		# numexp
+						(?=			# do not consume
+							\s+			# space
+							$wgap		# word gap
+							|$
+						)
+					/gxp) {
 		my $str = $1;
 		next unless $str =~ /\d/;
 		foreach my $ne (split /\s*$break\s*/,$str){
@@ -35,6 +35,7 @@ while ($txt =~ /	$wgap		# word gap
 			next if $ne !~ /\d/;
 			say "$ne";
 		}
+	}
 }
 
 
