@@ -54,21 +54,6 @@ sub norm_numexp {
     $$txtref =~ s/(\d)\((\d+)\)/$1^$2/g;
 }
 
-=head2 find_numexp
-
-=cut
-
-sub find_numexp {
-	my $txt = ${$_[0]};
-	my $hash = {};
-
-
-	my $num     = qr/[+\-]?\d+(?:[\.,]\d+)?/; # number (integer or decimal)
-	my $nl      = qr/[^A-Za-z]/;
-	my $extnum  = qr/$nl*$dec$nl*/;
-
-
-}
 
 =head1 AUTHOR
 
