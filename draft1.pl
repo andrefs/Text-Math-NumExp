@@ -31,7 +31,7 @@ sub find_numexp {
 		foreach my $ne (split /\s*$break\s*/,$str){
 			$ne =~ s/^[A-Za-z\s]*\s+//;
 			$ne =~ s/\s+[A-Za-z\s]*$//;
-			next if $ne eq '';
+			next if $ne =~ /^\s*$/;
 			next if $ne !~ /\d/;
 			say "$ne";
 		}
