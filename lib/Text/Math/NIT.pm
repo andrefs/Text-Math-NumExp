@@ -69,7 +69,7 @@ sub find_numexp {
 			$offset+= length $ne;
 		}
 	}
-	return $numexps;
+	return wantarray ? @$numexps : $numexps;
 }
 
 
