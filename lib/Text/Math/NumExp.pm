@@ -1,9 +1,9 @@
 use 5.006;
 use strict;
 use warnings;
-package Text::Math::NIT;
+package Text::Math::NumExp;
 
-#ABSTRACT: Text::Math::NIT - Find Numbers In Text.
+#ABSTRACT: Text::Math::NumExp - Find Numbers In Text.
 
 use base 'Exporter';
 our @EXPORT = (qw/ 	norm_numexp
@@ -92,4 +92,4 @@ sub norm_numexp {
 
 
 
-1;    # End of Text::Math::NIT
+1;    # End of Text::Math::NumExp
