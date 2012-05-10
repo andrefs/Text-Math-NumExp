@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Test::More tests => 3;
-use Text::Math::NIT;
+use Text::Math::NumExp;
 
 my $txt = join '',<DATA>;
 norm_numexp(\$txt);
