@@ -32,6 +32,7 @@ sub find_numexp {
 	my $break 	= qr{%|°C|,\s};		# common number-ending patterns
 	my $end 	= qr{$break|,$};	#
 	my $wgap 	= qr{$w+$s+$w+};	# gap between words
+	my $punct	= qr{[:,\.!?\/]}; 	# punctuation
 
 	while ($txt =~ /	$wgap		# word gap
 						$x*			# remaning characters before numexp
@@ -52,12 +53,30 @@ sub find_numexp {
 			(substr $txt, $str_offset) =~ /\Q$ne\E/;
 			my $ne_offset = $str_offset + $-[0];
 
+			# Remove (partial) word, punctuation or space at the begining
 			$ne_offset+= $+[0]
-				if $ne =~ s/^[A-Za-z\s]*\s+//;
+				if $ne =~ s/^(?:[A-Za-z\s]|$punct)*\s+//;
 
-			$ne =~ s/\s+[A-Za-z\s]*$//;
+			# Remove punctuation at the end
+			$ne =~ s/$punct*$//;
+
+			# Remove space followed by word chars or punctuation at the end
+			$ne =~ s/\s+(?:[A-Za-z\s]|$punct)*$//;
+
+
+			# Remove single '(' at the begining if there is no closing ')'
+			$ne_offset+= $+[0]
+				if $ne !~ /\)/ and $ne =~ s/^\(//;
+
+			# Remove single ')' at the begining if there is no opening '('
+			$ne =~ s/\)$// if $ne !~ /\(/;
+
+			# Ignore if string is empty or blank
 			next if $ne =~ /^\s*$/;
+
+			# Ignore if string doesn't have a digit
 			next if $ne !~ /\d/;
+
 
 			$offset = $ne_offset;
 			my $length = length($ne);
