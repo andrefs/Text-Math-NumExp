@@ -5,6 +5,7 @@ package Text::Math::NumExp;
 
 #ABSTRACT: Text::Math::NumExp - Find Numbers In Text.
 
+use utf8::all;
 use base 'Exporter';
 our @EXPORT = (qw/ 	norm_numexp
 					find_numexp
@@ -100,13 +101,17 @@ sub norm_numexp {
 	my $txtref = $_[0];
 
 	# 10 x 5 -> 10*5
-    $$txtref =~ s/(\d)\s{1,2}?x\s{1,2}?(\d)/$1*$2/g;
+	my $mult = qr{[x×*✖✕✱∗﹡＊]};
+    $$txtref =~ s/(\d)\s{1,2}?$mult\s{1,2}?(\d)/$1*$2/g;
 
     # 10 ^ 5 -> 10^5
     $$txtref =~ s/(\d)\s{1,2}?\^\s{1,2}?(\d)/$1^$2/g;
 
     # 10(5) -> 10^5
     $$txtref =~ s/(\d)\((\d+)\)/$1^$2/g;
+
+	# *1011 -> *10^11
+	$$txtref =~ s/(\d)[*]10(\d{2})/$1*10^$2/g;
 }
 
 
