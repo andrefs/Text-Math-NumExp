@@ -26,10 +26,10 @@ sub find_numexp {
 	my $str_offset = 0;
 	my $numexps = [];
 
-	my $w 		= qr{[A-Za-z]};    	# letter
+	my $w 		= qr{[A-Za-z\-]};    	# letter
 	my $s		= qr{[ \t]};		# space excluding \n	
 	my $x 		= qr{[^\s\d]};		# not a space nor a digit
-	my $break 	= qr{%|°C|,\s};		# common number-ending patterns
+	my $break 	= qr{\-fold|%|°C|,\s};		# common number-ending patterns
 	my $end 	= qr{$break|,$};	#
 	my $wgap 	= qr{$w+$s+$w+};	# gap between words
 	my $punct	= qr{[:,\.!?\/]}; 	# punctuation
@@ -55,7 +55,7 @@ sub find_numexp {
 
 			# Remove (partial) word, punctuation or space at the begining
 			$ne_offset+= $+[0]
-				if $ne =~ s/^(?:[A-Za-z\s]|$punct)*\s+//;
+				if $ne =~ s/^(?:[A-Za-z\s\-]|$punct)*\s+//;
 
 			# Remove punctuation at the end
 			$ne =~ s/$punct*$//;
