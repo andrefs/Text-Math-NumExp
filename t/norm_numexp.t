@@ -7,7 +7,7 @@ use feature qw/say/;
 use utf8::all;
 
 my $txt = join '',<DATA>;
-norm_numexp(\$txt);
+norm_numexp(\$txt,{x => 1});
 
 like	($txt, qr/10\*1/,    "10 x 1   => 10*1" );
 like	($txt, qr/11\*1\.1/, "11 × 1.1 => 11*1.1" );

@@ -35,16 +35,22 @@ sub find_numexp {
 	my $wgap 	= qr{$w+$s+$w+};	# gap between words
 	my $punct	= qr{[:,\.!?\/]}; 	# punctuation
 
-	while ($txt =~ /	$wgap		# word gap
-						$x*			# remaning characters before numexp
-						\s+			# space
+	while ($txt =~ /
+						(?:
+							$wgap		# word gap
+							$x*			# remaning characters before numexp
+							\s+			# space
+						|
+							^			# or begining of line
+						)
 						(.*?) 		# numexp
 						(?=			# do not consume
 							\s+			# space
 							$wgap		# word gap
-							|$
+						|
+							$			# or end of line
 						)
-					/gxp) {
+					/mgxp) {
 		my $str = $1;
 		$str_offset = $-[1];
 		next unless $str =~ /\d/;
@@ -72,12 +78,7 @@ sub find_numexp {
 			# Remove single ')' at the begining if there is no opening '('
 			$ne =~ s/\)$// if $ne !~ /\(/;
 
-			# Ignore if string is empty or blank
-			next if $ne =~ /^\s*$/;
-
-			# Ignore if string doesn't have a digit
-			next if $ne !~ /\d/;
-
+			next if _ignore($ne,$options);
 
 			$offset = $ne_offset;
 			my $length = length($ne);
@@ -92,13 +93,27 @@ sub find_numexp {
 	return wantarray ? @$numexps : $numexps;
 }
 
+sub _ignore {
+	my ($ne, $options) = @_;
+	# Ignore if string is empty or blank
+	return 1 if $ne =~ /^\s*$/;
+
+	# Ignore if string doesn't have a digit
+	return 1 if $ne !~ /\d/;
+
+	return 1 if $options->{ipat}  and $ne =~ /$options->{ipat}/;
+	return 1 if $options->{ifunc} and $options->{ifunc}->($ne);
+
+	return;
+}
+
 
 =head2 norm_numexp
 
 =cut
 
 sub norm_numexp {
-	my $txtref = $_[0];
+	my ($txtref,$options) = @_;
 
 	# 10 x 5 -> 10*5
 	my $mult = qr{[x×*✖✕✱∗﹡＊]};
@@ -110,8 +125,11 @@ sub norm_numexp {
     # 10(5) -> 10^5
     $$txtref =~ s/(\d)\((\d+)\)/$1^$2/g;
 
-	# *1011 -> *10^11
-	$$txtref =~ s/(\d)[*]10(\d{2})/$1*10^$2/g;
+	# Extreme options
+	if ($options->{x}){
+		# *1011 -> *10^11
+		$$txtref =~ s/(\d)[*]10(\d{2})/$1*10^$2/g;
+	}
 }
 
 
