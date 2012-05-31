@@ -12,11 +12,11 @@ my $txt = join '',<DATA>;
 my $got = find_numwords($txt);
 
 my $expected = [
-  { length => 5, offset => 60, text => "four ", value => "4 " },
-  { length => 4, offset => 216, text => "two ", value => "2 " },
-  { length => 4, offset => 373, text => "one ", value => "1 " },
-  { length => 7, offset => 403, text => "twenty ", value => "20 " },
-  { length => 5, offset => 432, text => "five ", value => "5 " },
+  { length => 5,  offset => 60,  text => "four ",         value => "4 "    },
+  { length => 4,  offset => 216, text => "two ",          value => "2 "    },
+  { length => 4,  offset => 373, text => "one ",          value => "1 "    },
+  { length => 7,  offset => 403, text => "twenty ",       value => "20 "   },
+  { length => 5,  offset => 432, text => "five ",         value => "5 "    },
   { length => 13, offset => 456, text => "Two thousand ", value => "2000 " },
 ];
 
