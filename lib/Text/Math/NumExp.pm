@@ -9,7 +9,9 @@ use utf8::all;
 use base 'Exporter';
 our @EXPORT = (qw/ 	norm_numexp
 					find_numexp
+					find_numwords
 				/);
+use Lingua::EN::FindNumber;
 
 
 =head1 DESCRIPTION
@@ -91,6 +93,25 @@ sub find_numexp {
 		}
 	}
 	return wantarray ? @$numexps : $numexps;
+}
+
+=head2 find_numwords
+
+=cut
+
+sub find_numwords {
+	my ($txt,$options) = @_;
+	my $numbers = [];
+
+	while($txt =~ /($number_re)/g){
+		push @$numbers, { 
+				text   => $1, 
+				offset => $-[0],
+				length => $+[0]-$-[0],
+				value  => numify($1),
+			};
+	}
+	return wantarray ? @$numbers : $numbers;
 }
 
 sub _ignore {
