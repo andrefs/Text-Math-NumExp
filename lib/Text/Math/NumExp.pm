@@ -10,8 +10,10 @@ use base 'Exporter';
 our @EXPORT = (qw/ 	norm_numexp
 					find_numexp
 					find_numwords
+					solve
 				/);
 use Lingua::EN::FindNumber;
+use Scalar::Util qw/looks_like_number/;
 
 
 =head1 DESCRIPTION
@@ -84,10 +86,12 @@ sub find_numexp {
 
 			$offset = $ne_offset;
 			my $length = length($ne);
+			my $value = solve($ne);
 			push @$numexps, { 
-					text => $ne, 
-					offset => $offset, 
-					length => $length 
+					text 	=> $ne, 
+					offset 	=> $offset, 
+					length 	=> $length,
+					value 	=> $value,
 				};
 			$offset+= length $ne;
 		}
@@ -130,6 +134,19 @@ sub _ignore {
 	return;
 }
 
+=head2 solve
+
+Returns the value of a numerical expression. Retuns undef if expression is not solvable.
+
+=cut
+
+sub solve {
+	my ($ne,$options) = @_;
+	$ne =~ s/\^/**/g;
+	my $value = eval $ne;
+	return $value if looks_like_number($value);
+	return;
+}
 
 =head2 norm_numexp
 
