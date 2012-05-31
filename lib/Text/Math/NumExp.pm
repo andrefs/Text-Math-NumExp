@@ -134,6 +134,7 @@ sub _ignore {
 =head2 norm_numexp
 
 Normalizes common numeric expression patterns (including Unicode characters).
+
 =cut
 
 sub norm_numexp {
