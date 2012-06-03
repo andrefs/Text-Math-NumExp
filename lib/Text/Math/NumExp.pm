@@ -110,11 +110,14 @@ sub find_numwords {
 	my $numbers = [];
 
 	while($txt =~ /($number_re)/g){
+		my $text = $1;
+		my $value = numify($text);
+		next unless looks_like_number($value);
 		push @$numbers, { 
-				text   => $1, 
+				text   => $text, 
 				offset => $-[0],
 				length => $+[0]-$-[0],
-				value  => numify($1),
+				value  => $value,
 			};
 	}
 	return wantarray ? @$numbers : $numbers;
@@ -143,7 +146,11 @@ Returns the value of a numerical expression. Retuns undef if expression is not s
 sub solve {
 	my ($ne,$options) = @_;
 	$ne =~ s/\^/**/g;
-	my $value = eval $ne;
+	my $value;
+	{
+		no warnings 'all';
+		$value = eval $ne;
+	}
 	return $value if looks_like_number($value);
 	return;
 }
