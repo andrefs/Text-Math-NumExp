@@ -110,13 +110,16 @@ sub find_numwords {
 	my $numbers = [];
 
 	while($txt =~ /($number_re)/g){
-		my $text = $1;
+		my $text 	= $1;
+		my $start 	= $-[0];
+		my $end 	= $+[0];
+		$end = ($start + $-[0]) if($text =~ s/\s+$//);
 		my $value = numify($text);
 		next unless looks_like_number($value);
 		push @$numbers, { 
 				text   => $text, 
-				offset => $-[0],
-				length => $+[0]-$-[0],
+				offset => $start,
+				length => $end-$start,
 				value  => $value,
 			};
 	}
