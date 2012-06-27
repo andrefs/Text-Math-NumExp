@@ -14,6 +14,7 @@ our @EXPORT = (qw/ 	norm_numexp
 				/);
 use Lingua::EN::FindNumber;
 use Scalar::Util qw/looks_like_number/;
+use Safe;
 
 
 =head1 DESCRIPTION
@@ -152,7 +153,11 @@ sub solve {
 	my $value;
 	{
 		no warnings 'all';
-		$value = eval $ne;
+		#$value = eval $ne;
+		my ($cpt) = new Safe;
+		$cpt->permit(qw(lt i_lt gt i_gt le i_le ge i_ge eq i_eq ne i_ne ncmp i_ncmp slt sgt sle sge seq sne scmp));
+		$cpt->permit(qw(atan2 sin cos exp log sqrt rand srand));
+		$value = $cpt->reval($ne);
 	}
 	return $value if looks_like_number($value);
 	return;
