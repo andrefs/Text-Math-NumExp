@@ -179,8 +179,9 @@ sub norm_numexp {
     # 10 ^ 5 -> 10^5
     $$txtref =~ s/(\d)\s{1,2}?\^\s{1,2}?(\d)/$1^$2/g;
 
-    # 10(5) -> 10^5
+    # 10(5)/10[5] -> 10^5
     $$txtref =~ s/(\d)\((\d+)\)/$1^$2/g;
+    $$txtref =~ s/(\d)\[(\d+)\]/$1^$2/g;
 
 	# Extreme options
 	if ($options->{x}){

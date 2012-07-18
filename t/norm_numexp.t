@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More tests => 7;
 use Text::Math::NumExp;
 use feature qw/say/;
 use utf8::all;
@@ -15,6 +15,7 @@ like	($txt, qr/12\*1\.2/, "12 * 1.2 => 12*1.2" );
 
 like	($txt, qr/20\^2/,    "20 ^ 2 => 20^2" );
 like	($txt, qr/30\^3/,    "30(3)  => 30^3" );
+like	($txt, qr/40\^4/,    "40(4)  => 40^4" );
 like	($txt, qr/3\.4\*10\^11/, "3.4 × 1011 => 3.4*10^11" );
 
 __DATA__
@@ -23,4 +24,5 @@ __DATA__
 12 * 1.2
 20 ^ 2
 30(3)
+40[4]
 3.4 × 1011
