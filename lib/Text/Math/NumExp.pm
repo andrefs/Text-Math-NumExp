@@ -17,6 +17,13 @@ use Scalar::Util qw/looks_like_number/;
 use Safe;
 
 
+=head1 SYNOPSIS
+
+ use Text::Math::NumExp;
+ 
+ my $text = "Light travels at 3x10[8] m/s."
+ norm_numexp(\$text); # Text is now "Light travels at 3x10^8 m/s."
+
 =head1 DESCRIPTION
 
 =head1 SUBROUTINES/METHODS
