@@ -165,7 +165,7 @@ sub solve {
 
 =head2 norm_numexp
 
-Normalizes common numeric expression patterns (including Unicode characters).
+Normalizes common numerical expression patterns (including Unicode characters).
 
 =cut
 
