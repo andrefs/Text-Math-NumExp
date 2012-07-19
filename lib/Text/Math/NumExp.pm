@@ -22,7 +22,30 @@ use Safe;
  use Text::Math::NumExp;
  
  my $text = "Light travels at 3x10[8] m/s."
- norm_numexp(\$text); # Text is now "Light travels at 3x10^8 m/s."
+ norm_numexp($text); 
+ # "Light travels at 3x10^8 m/s."
+
+ $text = "The program used for the ampliﬁcation was as follows: 
+ 		5 min at 94°C, followed by 50 cycles consisting of 30s 
+		at 94°C, 30s at 62°C, and 30s at 72°C";
+
+ find_numexp($text);
+
+ # [ { length => 1, offset => 54,  text => 5,           value => 5     },
+ #   { length => 2, offset => 63,  text => 94,          value => 94    },
+ #   { length => 2, offset => 81,  text => 50,          value => 50    },
+ #   { length => 9, offset => 105, text => "30s at 94", value => undef },
+ #   { length => 9, offset => 119, text => "30s at 62", value => undef },
+ #   { length => 9, offset => 137, text => "30s at 72", value => undef },
+ # ] 
+ 
+ $text = "One plus one equals two.";
+ find_numwords($text);
+ 
+ # [ { length => 3, offset => 0, text => "One",  value => 1 },
+ #   { length => 3, offset => 9, text => "one",  value => 1 },
+ #   { length => 3, offset => 20, text => "two", value => 2 },
+ # ] 
 
 =head1 DESCRIPTION
 
@@ -35,7 +58,10 @@ Finds numeric expressions in text.
 =cut
 
 sub find_numexp {
-	my ($txt,$options) = @_;
+	my ($text_or_ref,$options) = @_;
+	my $text = (ref($text_or_ref) ? $$text_or_ref : $text_or_ref);
+
+
 	my $str_offset = 0;
 	my $numexps = [];
 
@@ -47,7 +73,7 @@ sub find_numexp {
 	my $wgap 	= qr{$w+$s+$w+};	# gap between words
 	my $punct	= qr{[:,\.!?\/]}; 	# punctuation
 
-	while ($txt =~ /
+	while ($text =~ /
 						(?:
 							$wgap		# word gap
 							$x*			# remaning characters before numexp
@@ -69,7 +95,7 @@ sub find_numexp {
 		my $offset = $str_offset;
 
 		foreach my $ne (split /\s*$break\s*/,$str){
-			(substr $txt, $str_offset) =~ /\Q$ne\E/;
+			(substr $text, $str_offset) =~ /\Q$ne\E/;
 			my $ne_offset = $str_offset + $-[0];
 
 			# Remove (partial) word, punctuation or space at the begining
@@ -114,10 +140,11 @@ Finds spelled-out numbers in text.
 =cut
 
 sub find_numwords {
-	my ($txt,$options) = @_;
+	my ($text_or_ref,$options) = @_;
+	my $text = (ref($text_or_ref) ? $$text_or_ref : $text_or_ref);
 	my $numbers = [];
 
-	while($txt =~ /($number_re)/g){
+	while($text =~ /($number_re)/g){
 		my $text 	= $1;
 		my $start 	= $-[0];
 		my $end 	= $+[0];
@@ -177,24 +204,29 @@ Normalizes common numerical expression patterns (including Unicode characters).
 =cut
 
 sub norm_numexp {
-	my ($txtref,$options) = @_;
+	my ($text_or_ref,$options) = @_;
+	my $text = (ref($text_or_ref) ? $$text_or_ref : $text_or_ref);
 
 	# 10 x 5 -> 10*5
 	my $mult = qr{[x×*✖✕✱∗﹡＊]};
-    $$txtref =~ s/(\d)\s{1,2}?$mult\s{1,2}?(\d)/$1*$2/g;
+    $text =~ s/(\d)\s{1,2}?$mult\s{1,2}?(\d)/$1*$2/g;
 
     # 10 ^ 5 -> 10^5
-    $$txtref =~ s/(\d)\s{1,2}?\^\s{1,2}?(\d)/$1^$2/g;
+    $text =~ s/(\d)\s{1,2}?\^\s{1,2}?(\d)/$1^$2/g;
 
     # 10(5)/10[5] -> 10^5
-    $$txtref =~ s/(\d)\((\d+)\)/$1^$2/g;
-    $$txtref =~ s/(\d)\[(\d+)\]/$1^$2/g;
+    $text =~ s/(\d)\((\d+)\)/$1^$2/g;
+    $text =~ s/(\d)\[(\d+)\]/$1^$2/g;
 
 	# Extreme options
 	if ($options->{x}){
 		# *1011 -> *10^11
-		$$txtref =~ s/(\d)[*]10(\d{2})/$1*10^$2/g;
+		$text =~ s/(\d)[*]10(\d{2})/$1*10^$2/g;
 	}
+
+	if(ref($text_or_ref))	{	$$text_or_ref = $text;	}
+	else 					{	return $text;			}
+	return;
 }
 
 
