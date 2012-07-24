@@ -49,6 +49,18 @@ use Safe;
 
 =head1 DESCRIPTION
 
+This module searches for numbers and numeric expressions in a text, including:
+
+=over 4
+
+=item - numbers (e.g 30.000, 3.4, -20)
+
+=item - spelled-out numbers (e.g. "one million", "three")
+
+=item - complex numeric expressions (e.g. 1.5x10^-5)
+
+=back
+
 =head1 SUBROUTINES/METHODS
 
 =head2 find_numexp
