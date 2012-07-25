@@ -3,7 +3,7 @@ use strict;
 use warnings;
 package Text::Math::NumExp;
 
-#ABSTRACT: Text::Math::NumExp - Find Numbers In Text.
+#ABSTRACT: Text::Math::NumExp - Find numeric expressions in text.
 
 use utf8::all;
 use base 'Exporter';

@@ -10,7 +10,7 @@ use Data::Dump qw/dump/;
 
 my $txt = join '',<DATA>;
 norm_numexp(\$txt,{x => 1, ipat => qr/^\s*\[\d{1,2}\]|\(\d{1,2}\)\s*$/});
-my $got = find_numexp($txt,{x => 1, ipat => qr/^\s*\[\d{1,2}\]|\(\d{1,2}\)\s*$/});
+my $got = find_numexp(\$txt,{x => 1, ipat => qr/^\s*\[\d{1,2}\]|\(\d{1,2}\)\s*$/});
 
 my $expected = [
 	{ length => 4, offset => 0,  text => "10*1",      value => 10           },
