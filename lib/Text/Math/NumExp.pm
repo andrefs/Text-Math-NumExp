@@ -235,6 +235,8 @@ sub norm_numexp {
 		$text =~ s/(\d)[*]10(\d{2})/$1*10^$2/g;
 	}
 
+	$text =~ s/’/'/g;
+
 	if(ref($text_or_ref))	{	$$text_or_ref = $text;	}
 	else 					{	return $text;			}
 	return;

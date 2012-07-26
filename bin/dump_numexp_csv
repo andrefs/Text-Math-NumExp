@@ -1,0 +1,43 @@
+#!/usr/bin/env perl 
+
+use strict; # use warnings;
+use Data::Dump qw/dump/;
+use feature qw/say/;
+use Text::Math::NumExp;
+use Text::CSV;
+use utf8::all;
+#PODNAME: find_nes.pl
+
+my $csv = Text::CSV->new ({
+	binary 		 	=> 1,
+	quote_char 	 	=> '"',
+	escape_char  	=> '"',
+	always_quote 	=> '"',
+	quote_space 	=> 0,
+}) or die "Cannot use CSV: ".Text::CSV->error_diag ();
+$csv->column_names (qw/ file offset length text value /);
+
+for my $doc (@ARGV){
+	open my $fh, '<', $doc;
+	my $text;
+	{
+		local $/;
+		$text = <$fh>;
+	}
+	norm_numexp(\$text);
+	my $numexp   = find_numexp(\$text);
+	#dump($numexp);
+	for (@$numexp){
+		$csv->combine($doc,$_->{offset},$_->{length},$_->{text},$_->{value});
+	say $csv->string;
+	}
+	my $numwords = find_numwords(\$text);
+	#dump($numwords);
+	for (@$numwords){
+		$csv->combine($doc,$_->{offset},$_->{length},$_->{text},$_->{value});
+	say $csv->string;
+	}
+
+}
+
+
