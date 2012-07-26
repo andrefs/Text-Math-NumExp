@@ -31,9 +31,9 @@ use Safe;
 
  find_numexp($text);
 
- # [ { length => 1, offset => 54,  text => 5,           value => 5     },
- #   { length => 2, offset => 63,  text => 94,          value => 94    },
- #   { length => 2, offset => 81,  text => 50,          value => 50    },
+ # [ { length => 1, offset =>  54, text => 5,           value => 5     },
+ #   { length => 2, offset =>  63, text => 94,          value => 94    },
+ #   { length => 2, offset =>  81, text => 50,          value => 50    },
  #   { length => 9, offset => 105, text => "30s at 94", value => undef },
  #   { length => 9, offset => 119, text => "30s at 62", value => undef },
  #   { length => 9, offset => 137, text => "30s at 72", value => undef },
@@ -42,8 +42,8 @@ use Safe;
  $text = "One plus one equals two.";
  find_numwords($text);
  
- # [ { length => 3, offset => 0, text => "One",  value => 1 },
- #   { length => 3, offset => 9, text => "one",  value => 1 },
+ # [ { length => 3, offset =>  0, text => "One", value => 1 },
+ #   { length => 3, offset =>  9, text => "one", value => 1 },
  #   { length => 3, offset => 20, text => "two", value => 2 },
  # ] 
 
@@ -198,8 +198,7 @@ sub solve {
 	$ne =~ s/\^/**/g;
 	my $value;
 	{
-		no warnings 'all';
-		#$value = eval $ne;
+		local $SIG{__WARN__} = sub {};
 		my ($cpt) = new Safe;
 		$cpt->permit(qw(lt i_lt gt i_gt le i_le ge i_ge eq i_eq ne i_ne ncmp i_ncmp slt sgt sle sge seq sne scmp));
 		$cpt->permit(qw(atan2 sin cos exp log sqrt rand srand));
