@@ -6,7 +6,7 @@ use feature qw/say/;
 use Text::Math::NumExp;
 use Text::CSV;
 use utf8::all;
-#PODNAME: find_nes.pl
+#PODNAME: dump_numexp_csv
 
 my $csv = Text::CSV->new ({
 	binary 		 	=> 1,
