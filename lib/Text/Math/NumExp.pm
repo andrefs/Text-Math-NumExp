@@ -8,10 +8,10 @@ package Text::Math::NumExp;
 use utf8::all;
 use base 'Exporter';
 our @EXPORT = (qw/ 	norm_numexp
-					find_numexp
-					find_numwords
-					solve
-				/);
+			find_numexp
+			find_numwords
+			solve
+			/);
 use Lingua::EN::FindNumber;
 use Scalar::Util qw/looks_like_number/;
 use Safe;
@@ -23,14 +23,17 @@ use Safe;
  
  my $text = "Light travels at 3x10[8] m/s."
  norm_numexp($text); 
+
+ # Returns:
  # "Light travels at 3x10^8 m/s."
 
  $text = "The program used for the ampliﬁcation was as follows: 
- 		5 min at 94°C, followed by 50 cycles consisting of 30s 
-		at 94°C, 30s at 62°C, and 30s at 72°C";
+ 	5 min at 94°C, followed by 50 cycles consisting of 30s 
+	at 94°C, 30s at 62°C, and 30s at 72°C";
 
  find_numexp($text);
 
+ # Returns:
  # [ { length => 1, offset =>  54, text => 5,           value => 5     },
  #   { length => 2, offset =>  63, text => 94,          value => 94    },
  #   { length => 2, offset =>  81, text => 50,          value => 50    },
@@ -42,6 +45,7 @@ use Safe;
  $text = "One plus one equals two.";
  find_numwords($text);
  
+ # Returns:
  # [ { length => 3, offset =>  0, text => "One", value => 1 },
  #   { length => 3, offset =>  9, text => "one", value => 1 },
  #   { length => 3, offset => 20, text => "two", value => 2 },
