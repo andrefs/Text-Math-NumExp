@@ -17,61 +17,6 @@ use Scalar::Util qw/looks_like_number/;
 use Safe;
 
 
-=head1 SYNOPSIS
-
- use Text::Math::NumExp;
- 
- my $text = "Light travels at 3x10[8] m/s."
- norm_numexp($text); 
-
- # Returns:
- # "Light travels at 3x10^8 m/s."
-
- $text = "The program used for the ampliﬁcation was as follows: 
- 	5 min at 94°C, followed by 50 cycles consisting of 30s 
-	at 94°C, 30s at 62°C, and 30s at 72°C";
-
- find_numexp($text);
-
- # Returns:
- # [ { length => 1, offset =>  54, text => 5,           value => 5     },
- #   { length => 2, offset =>  63, text => 94,          value => 94    },
- #   { length => 2, offset =>  81, text => 50,          value => 50    },
- #   { length => 9, offset => 105, text => "30s at 94", value => undef },
- #   { length => 9, offset => 119, text => "30s at 62", value => undef },
- #   { length => 9, offset => 137, text => "30s at 72", value => undef },
- # ] 
- 
- $text = "One plus one equals two.";
- find_numwords($text);
- 
- # Returns:
- # [ { length => 3, offset =>  0, text => "One", value => 1 },
- #   { length => 3, offset =>  9, text => "one", value => 1 },
- #   { length => 3, offset => 20, text => "two", value => 2 },
- # ] 
-
-=head1 DESCRIPTION
-
-This module searches for numbers and numeric expressions in a text, including:
-
-=over 4
-
-=item - numbers (e.g 30.000, 3.4, -20)
-
-=item - spelled-out numbers (e.g. "one million", "three")
-
-=item - complex numeric expressions (e.g. 1.5x10^-5)
-
-=back
-
-=head1 SUBROUTINES/METHODS
-
-=head2 find_numexp
-
-Finds numeric expressions in text.
-
-=cut
 
 sub find_numexp {
 	my ($text_or_ref,$options) = @_;
@@ -82,12 +27,12 @@ sub find_numexp {
 	my $numexps = [];
 
 	my $w 		= qr{[A-Za-z\-]};    	# letter
-	my $s		= qr{[ \t]};		# space excluding \n	
-	my $x 		= qr{[^\s\d]};		# not a space nor a digit
-	my $break 	= qr{\-fold|%|°C|,\s};		# common number-ending patterns
-	my $end 	= qr{$break|,$};	#
-	my $wgap 	= qr{$w+$s+$w+};	# gap between words
-	my $punct	= qr{[:,\.!?\/]}; 	# punctuation
+	my $s		= qr{[ \t]};			# space excluding \n	
+	my $x 		= qr{[^\s\d]};			# not a space nor a digit
+	my $break 	= qr{\-fold|%|°C|,\s};	# common number-ending patterns
+	my $end 	= qr{$break|,$};		#
+	my $wgap 	= qr{$w+$s+$w+};		# gap between words
+	my $punct	= qr{[:,\.!?\/]}; 		# punctuation
 
 	while ($text =~ /
 						(?:
@@ -149,11 +94,6 @@ sub find_numexp {
 	return wantarray ? @$numexps : $numexps;
 }
 
-=head2 find_numwords
-
-Finds spelled-out numbers in text.
-
-=cut
 
 sub find_numwords {
 	my ($text_or_ref,$options) = @_;
@@ -191,11 +131,6 @@ sub _ignore {
 	return;
 }
 
-=head2 solve
-
-Returns the value of a numerical expression. Retuns undef if expression is not solvable.
-
-=cut
 
 sub solve {
 	my ($ne,$options) = @_;
@@ -212,11 +147,6 @@ sub solve {
 	return;
 }
 
-=head2 norm_numexp
-
-Normalizes common numerical expression patterns (including Unicode characters).
-
-=cut
 
 sub norm_numexp {
 	my ($text_or_ref,$options) = @_;
@@ -249,3 +179,79 @@ sub norm_numexp {
 
 
 1;    # End of Text::Math::NumExp
+
+__END__
+
+=pod
+
+=head1 NAME
+
+Text::Math::NumExp - Text::Math::NumExp - Find numeric expressions in text.
+
+=head1 SYNOPSIS
+
+ use Text::Math::NumExp;
+ 
+ my $text = "Light travels at 3x10[8] m/s."
+ norm_numexp($text); 
+
+ # Returns:
+ # "Light travels at 3x10^8 m/s."
+
+ $text = "The program used for the ampliﬁcation was as follows: 
+ 	5 min at 94°C, followed by 50 cycles consisting of 30s 
+	at 94°C, 30s at 62°C, and 30s at 72°C";
+
+ find_numexp($text);
+
+ # Returns:
+ # [ { length => 1, offset =>  54, text => 5,           value => 5     },
+ #   { length => 2, offset =>  63, text => 94,          value => 94    },
+ #   { length => 2, offset =>  81, text => 50,          value => 50    },
+ #   { length => 9, offset => 105, text => "30s at 94", value => undef },
+ #   { length => 9, offset => 119, text => "30s at 62", value => undef },
+ #   { length => 9, offset => 137, text => "30s at 72", value => undef },
+ # ] 
+ 
+ $text = "One plus one equals two.";
+ find_numwords($text);
+ 
+ # Returns:
+ # [ { length => 3, offset =>  0, text => "One", value => 1 },
+ #   { length => 3, offset =>  9, text => "one", value => 1 },
+ #   { length => 3, offset => 20, text => "two", value => 2 },
+ # ] 
+
+=head1 DESCRIPTION
+
+This module searches for numbers and numeric expressions in a text, including:
+
+=over 4
+
+=item - numbers (e.g 30.000, 3.4, -20)
+
+=item - spelled-out numbers (e.g. "one million", "three")
+
+=item - complex numeric expressions (e.g. 1.5x10^-5)
+
+=back
+
+=head1 SUBROUTINES/METHODS
+
+=head2 find_numexp
+
+Finds numeric expressions in text.
+
+=head2 find_numwords
+
+Finds spelled-out numbers in text.
+
+=head2 solve
+
+Returns the value of a numerical expression. Retuns undef if expression is not solvable.
+
+=head2 norm_numexp
+
+Normalizes common numerical expression patterns (including Unicode characters).
+
+=cut
