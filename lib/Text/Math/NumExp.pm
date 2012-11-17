@@ -198,7 +198,7 @@ Text::Math::NumExp - Text::Math::NumExp - Find numeric expressions in text.
  # Returns:
  # "Light travels at 3x10^8 m/s."
 
- $text = "The program used for the ampliﬁcation was as follows: 
+ $text = "The program used for the amplification was as follows: 
  	5 min at 94°C, followed by 50 cycles consisting of 30s 
 	at 94°C, 30s at 62°C, and 30s at 72°C";
 
